@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - ASPIRE 360</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="results-container">
+        <h2>Your Career Assessment Results</h2>
+        
+        <div class="score-section">
+            <div class="score-card">
+                <h3>Technical Skills</h3>
+                <div class="score-bar">
+                    <div class="score-fill" style="width: 85%"></div>
+                </div>
+                <p>Strong aptitude for technical roles</p>
+            </div>
+        </div>
+
+        <div class="recommended-paths">
+            <h3>Recommended Career Paths</h3>
+            <select class="path-dropdown" id="careerPath">
+                <optgroup label="Explored Paths">
+                    <option value="software-dev">Software Development</option>
+                    <option value="data-science">Data Science</option>
+                    <option value="ai-ml">AI/ML Engineering</option>
+                </optgroup>
+                <optgroup label="Unexplored Paths">
+                    <option value="cloud-arch">Cloud Architecture</option>
+                    <option value="cybersecurity">Cybersecurity</option>
+                    <option value="devops">DevOps Engineering</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="next-steps">
+            <h3>Next Steps</h3>
+            <button onclick="window.location.href='module.html'" class="btn primary">View Learning Module</button>
+            <button onclick="window.location.href='feedback.html'" class="btn secondary">Provide Feedback</button>
+        </div>
+    </div>
+</body>
+</html>

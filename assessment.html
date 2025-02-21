@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Assessment - ASPIRE 360</title>
+    <style>
+        /* Include all previous CSS here */
+        .assessment-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+        }
+
+        .assessment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .assessment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .assessment-header h1 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-item:hover {
+            background: #f1f5f9;
+            border-color: #667eea;
+        }
+
+        .option-item.selected {
+            background: #eef2ff;
+            border-color: #667eea;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #prevBtn {
+            background: #cbd5e0;
+            color: #2d3748;
+        }
+
+        #nextBtn, .submit-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .save-btn {
+            background: #48bb78;
+            color: white;
+        }
+
+        .results-container {
+            margin-top: 2rem;
+        }
+
+        .category-score {
+            margin: 1rem 0;
+        }
+
+        .score-bar {
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="assessment-wrapper">
+        <div class="assessment-container">
+            <div class="assessment-header">
+                <h1>Career Assessment</h1>
+                <div class="progress-bar">
+                    <div id="progress" class="progress"></div>
+                </div>
+            </div>
+            
+            <div id="question-container"></div>
+
+            <div class="navigation-buttons">
+                <button id="prevBtn" class="nav-btn">Previous</button>
+                <button id="saveBtn" class="nav-btn save-btn">Save Answer</button>
+                <button id="nextBtn" class="nav-btn">Next</button>
+            </div>
+
+            <div id="submit-section" style="display: none; margin-top: 2rem;">
+                <button id="submitBtn" class="nav-btn submit-btn" style="width: 100%;">Submit Assessment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                category: "Programming",
+                question: "What will be the output of: console.log(typeof(undefined))?",
+                options: ["undefined", "object", "string", "null"],
+                correctAnswer: 0
+            },
+            {
+                category: "Programming",
+                question: "Which data structure would be most appropriate for implementing an undo/redo functionality?",
+                options: ["Queue", "Stack", "Array", "Linked List"],
+                correctAnswer: 1
+            },
+            {
+                category: "Mathematical",
+                question: "If a function f(x) = 2x + 3 and g(x) = x² - 1, what is f(g(2))?",
+                options: ["7", "9", "11", "13"],
+                correctAnswer: 1
+            },
+            {
+                category: "Mathematical",
+                question: "What is the probability of getting at least one head when flipping two coins?",
+                options: ["1/4", "1/2", "3/4", "1"],
+                correctAnswer: 2
+            },
+            {
+                category: "Logical",
+                question: "If all mammals are animals, and all dogs are mammals, which conclusion is valid?",
+                options: [
+                    "All animals are mammals",
+                    "All dogs are animals",
+                    "All mammals are dogs",
+                    "No valid conclusion"
+                ],
+                correctAnswer: 1
+            },
+            {
+                category: "Logical",
+                question: "In a race, if A beats B and B beats C, which statement must be true?",
+                options: [
+                    "A is fastest",
+                    "C is slowest",
+                    "A beats C",
+                    "Not enough information"
+                ],
+                correctAnswer: 2
+            },
+            {
+                category: "Academic",
+                question: "Which field would you prefer to study further?",
+                options: [
+                    "Computer Science",
+                    "Data Science",
+                    "Artificial Intelligence",
+                    "Software Engineering"
+                ]
+            },
+            {
+                category: "Academic",
+                question: "What type of projects interest you the most?",
+                options: [
+                    "Web Development",
+                    "Mobile Apps",
+                    "Machine Learning",
+                    "Game Development"
+                ]
+            },
+            {
+                category: "Skillset",
+                question: "How do you typically approach problem-solving?",
+                options: [
+                    "Break down into smaller parts",
+                    "Research existing solutions",
+                    "Trial and error",
+                    "Collaborate with others"
+                ]
+            },
+            {
+                category: "Skillset",
+                question: "Which best describes your working style?",
+                options: [
+                    "Detail-oriented and methodical",
+                    "Creative and innovative",
+                    "Fast-paced and adaptive",
+                    "Analytical and thorough"
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestion];
+            const container = document.getElementById('question-container');
+            
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">
+                        Question ${currentQuestion + 1} of ${questions.length}
+                        <span style="float: right; color: #667eea;">${question.category}</span>
+                    </div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options-container">
+                        ${question.options.map((option, index) => `
+                            <div class="option-item ${answers[currentQuestion] === index ? 'selected' : ''}" 
+                                 onclick="selectOption(${index})">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').style.display = currentQuestion === questions.length - 1 ? 'none' : 'block';
+            document.getElementById('submit-section').style.display = currentQuestion === questions.length - 1 ? 'block' : 'none';
+        }
+
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            const options = document.querySelectorAll('.option-item');
+            options.forEach(option => option.classList.remove('selected'));
+            options[index].classList.add('selected');
+        }
+
+        function calculateResults() {
+            const results = {
+                programming: 0,
+                mathematical: 0,
+                logical: 0,
+                preferences: {
+                    academic: [],
+                    skillset: []
+                }
+            };
+
+            questions.forEach((question, index) => {
+                const answer = answers[index];
+                if (answer !== null) {
+                    if (question.correctAnswer !== undefined) {
+                        if (question.category.toLowerCase() in results) {
+                            results[question.category.toLowerCase()] += answer === question.correctAnswer ? 1 : 0;
+                        }
+                    } else {
+                        if (question.category.toLowerCase() === 'academic' || question.category.toLowerCase() === 'skillset') {
+                            results.preferences[question.category.toLowerCase()].push(question.options[answer]);
+                        }
+                    }
+                }
+            });
+
+            return results;
+        }
+
+        function showResults(results) {
+            const container = document.querySelector('.assessment-container');
+            const resultsHTML = `
+                <div class="results-container">
+                    <h2 style="color: #2d3748; margin-bottom: 2rem;">Assessment Results</h2>
+                    
+                    <div class="category-score">
+                        <h3 style="color: #2d3748; margin-bottom: 1rem;">Technical Skills</h3>
+                        
+                        <p>Programming Score: ${(results.programming / 2 * 100).toFixed(1)}%</p>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: ${results.programming / 2 * 100}%"></div>
+                        </div>
+                        
+                        <p>Mathematical Score: ${(results.mathematical / 2 * 100).toFixed(1)}%</p>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: ${results.mathematical / 2 * 100}%"></div>
+                        </div>
+                        
+                        <p>Logical Reasoning Score: ${(results.logical / 2 * 100).toFixed(1)}%</p>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: ${results.logical / 2 * 100}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-score">
+                        <h3 style="color: #2d3748; margin-bottom: 1rem;">Preferences</h3>
+                        <p>Academic Interests: ${results.preferences.academic.join(', ')}</p>
+                        <p>Working Style: ${results.preferences.skillset.join(', ')}</p>
+                    </div>
+
+                    <button onclick="window.location.href='feedback.html'" class="nav-btn submit-btn" style="width: 100%; margin-top: 2rem;">
+                        Provide Feedback
+                    </button>
+                </div>
+            `;
+
+            container.innerHTML = resultsHTML;
+        }
+
+        // Initialize the assessment
+        document.addEventListener('DOMContentLoaded', () => {
+            displayQuestion();
+            updateProgress();
+
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    displayQuestion();
+                    updateProgress();
+                }
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    displayQuestion();
+                    updateProgress();
+                }
+            });
+
+            document.getElementById('saveBtn').addEventListener('click', () => {
+                if (answers[currentQuestion] !== null) {
+                    alert('Answer saved successfully!');
+                } else {
+                    alert('Please select an answer before saving.');
+                }
+            });
+
+            document.getElementById('submitBtn').addEventListener('click', () => {
+                if (answers.includes(null)) {
+                    alert('Please answer all questions before submitting.');
+                    return;
+                }
+                const results = calculateResults();
+                showResults(results);
+            });
+        });
+    </script>
+</body>
+</html>

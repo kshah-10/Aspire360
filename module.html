@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Module - ASPIRE 360</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="module-container">
+        <h2>Your Personalized Learning Path</h2>
+        
+        <div class="career-selection">
+            <h3>Selected Career: Software Development</h3>
+            <select class="path-dropdown" id="careerPath" onchange="updateModule()">
+                <optgroup label="Explored Paths">
+                    <option value="software-dev" selected>Software Development</option>
+                    <option value="data-science">Data Science</option>
+                    <option value="ai-ml">AI/ML Engineering</option>
+                </optgroup>
+                <optgroup label="Unexplored Paths">
+                    <option value="cloud-arch">Cloud Architecture</option>
+                    <option value="cybersecurity">Cybersecurity</option>
+                    <option value="devops">DevOps Engineering</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="module-content">
+            <h3>2-Week Learning Module</h3>
+            
+            <div class="module-week">
+                <h4>Week 1: Foundation</h4>
+                <ul>
+                    <li>Day 1: Programming Basics
+                        <p>Introduction to programming concepts and syntax</p>
+                    </li>
+                    <li>Day 2: Data Structures
+                        <p>Understanding arrays, objects, and basic algorithms</p>
+                    </li>
+                    <li>Day 3: Web Technologies
+                        <p>HTML, CSS, and JavaScript fundamentals</p>
+                    </li>
+                    <li>Day 4: Frontend Development
+                        <p>Building responsive user interfaces</p>
+                    </li>
+                    <li>Day 5: Project Day
+                        <p>Create a simple web application</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="module-week">
+                <h4>Week 2: Advanced Topics</h4>
+                <ul>
+                    <li>Day 1: Backend Development
+                        <p>Server-side programming and databases</p>
+                    </li>
+                    <li>Day 2: API Development
+                        <p>Creating and consuming RESTful APIs</p>
+                    </li>
+                    <li>Day 3: Testing & Deployment
+                        <p>Unit testing and deployment processes</p>
+                    </li>
+                    <li>Day 4: Best Practices
+                        <p>Code organization and documentation</p>
+                    </li>
+                    <li>Day 5: Final Project
+                        <p>Build a full-stack application</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="module-actions">
+            <button class="btn primary">Start Learning</button>
+            <button class="btn secondary" onclick="window.location.href='feedback.html'">Provide Feedback</button>
+        </div>
+    </div>
+
+    <script src="js/module.js">
+        // Add this code at the beginning of module.html's script section,
+// just after the <script> tag
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if assessment is completed
+    const assessmentCompleted = localStorage.getItem('assessmentCompleted');
+    
+    if (!assessmentCompleted) {
+        alert('Please complete the assessment first!');
+        window.location.href = 'assessment.html';
+        return;
+    }
+});
+
+// Rest of your existing module.js code goes here
+function updateModule() {
+    const selectedPath = document.getElementById('careerPath').value;
+    // Your existing module update logic
+}
+    </script>
+</body>
+</html>
